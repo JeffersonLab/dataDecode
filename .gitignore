@@ -3,4 +3,5 @@
 *.a
 *.o
 *.d
-
+.tramp_history
+dataDecode
