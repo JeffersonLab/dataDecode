@@ -22,7 +22,7 @@ RANLIB                  = ranlib
 INCS			= -I.
 CFLAGS			= -Wall -g  \
 			  -L. 
-SRC			= dataDecode.c fa250dec.c
+SRC			= $(wildcard *.c)
 DEPS			= $(SRC:.c=.d)
 OBJS			= $(SRC:.c=.o)
 PROGS			= dataDecode

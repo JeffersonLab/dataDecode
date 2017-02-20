@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdint.h>
+#include "jlabdec.h"
 #include "fa250dec.h"
 
 struct fadc_data_struct fadc_data;
