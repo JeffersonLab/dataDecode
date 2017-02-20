@@ -2,15 +2,17 @@
 #define __FA250DEC__
 #include <stdint.h>
 
+/* 2: EVENT HEADER */
 typedef struct
 {
   uint32_t trigger_number:12;
-  uint32_t trigger_time:10
+  uint32_t trigger_time:10;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
   uint32_t data_type_defining:1;  
 } fa250_event_header;
 
+/* 3: TRIGGER TIME */
 typedef struct
 {
   uint32_t T_F:8;
@@ -31,6 +33,7 @@ typedef struct
   uint32_t data_type_defining:1;
 } fa250_trigger_time_2;
 
+/* 4: WINDOW RAW DATA */
 typedef struct
 {
   uint32_t PTW:9;
@@ -51,6 +54,7 @@ typedef struct
   uint32_t data_type_defining:1;
 } fa250_window_raw_data_n;
 
+/* 9: PULSE PARAMETERS */
 typedef struct
 {
   uint32_t pedestal_sum:14;
@@ -75,7 +79,7 @@ typedef struct
 typedef struct
 {
   uint32_t samples_over_threshold:1;
-  uint32_t vpeak_unfound:1;
+  uint32_t vpeak_not_found:1;
   uint32_t vpeak_beyond:1;
   uint32_t pulse_peak:12;
   uint32_t fine_time:6;
@@ -83,6 +87,20 @@ typedef struct
   uint32_t parameter_type_tag:1;
   uint32_t data_type_defining:1;
 } fa250_pulse_parameters_3;
+
+/* 12: SCALER */
+typedef struct
+{
+  uint32_t number_scaler_words:6;
+  uint32_t undef:21;
+  uint32_t data_type_tag:4;
+  uint32_t data_type_defining:1;
+} scaler_1;
+
+typedef struct
+{
+  uint32_t data:32;
+} scaler_2;
 
 struct 
 fadc_data_struct 
