@@ -11,6 +11,12 @@ typedef struct
   uint32_t data_type_defining:1;  
 } fa125_event_header;
 
+typedef union
+{
+  uint32_t raw;
+  fa125_event_header bf;
+} fa125_event_header_t;
+
 /* 3: TRIGGER TIME */
 typedef struct
 {
@@ -22,6 +28,12 @@ typedef struct
   uint32_t data_type_defining:1;
 } fa125_trigger_time_1;
 
+typedef union
+{
+  uint32_t raw;
+  fa125_trigger_time_1 bf;
+} fa125_trigger_time_1_t;
+
 typedef struct
 {
   uint32_t T_F:8;
@@ -30,6 +42,13 @@ typedef struct
   uint32_t undef:7;
   uint32_t data_type_defining:1;
 } fa125_trigger_time_2;
+
+typedef union
+{
+  uint32_t raw;
+  fa125_trigger_time_2 bf;
+} fa125_trigger_time_2_t;
+
 
 /* 4: WINDOW RAW DATA */
 typedef struct
@@ -42,6 +61,12 @@ typedef struct
   uint32_t data_type_defining:1;
 } fa125_window_raw_data_1;
 
+typedef union
+{
+  uint32_t raw;
+  fa125_window_raw_data_1 bf;
+} fa125_window_raw_data_1_t;
+
 typedef struct
 {
   uint32_t adc_sample_2:13;
@@ -52,6 +77,12 @@ typedef struct
   uint32_t undef1:1;
   uint32_t data_type_defining:1;
 } fa125_window_raw_data_n;
+
+typedef union
+{
+  uint32_t raw;
+  fa125_window_raw_data_n bf;
+} fa125_window_raw_data_n_t;
 
 /* 5: PULSE DATA, CDC FORMAT */
 typedef struct
@@ -65,6 +96,12 @@ typedef struct
   uint32_t data_type_defining:1;
 } fa125_pulse_cdc_1;
 
+typedef union
+{
+  uint32_t raw;
+  fa125_pulse_cdc_1 bf;
+} fa125_pulse_cdc_1_t;
+
 typedef struct
 {
   uint32_t first_max_amplitude:9;
@@ -72,6 +109,12 @@ typedef struct
   uint32_t pedestal:8;
   uint32_t data_type_defining:1;
 } fa125_pulse_cdc_2;
+
+typedef union
+{
+  uint32_t raw;
+  fa125_pulse_cdc_2 bf;
+} fa125_pulse_cdc_2_t;
 
 /* 6: PULSE DATA, FDC FORMAT - Integral + Time */
 typedef struct
@@ -85,6 +128,12 @@ typedef struct
   uint32_t data_type_defining:1;
 } fa125_pulse_fdc_integral_1;
 
+typedef union
+{
+  uint32_t raw;
+  fa125_pulse_fdc_integral_1 bf;
+} fa125_pulse_fdc_integral_1_t;
+
 typedef struct
 {
   uint32_t pedestal:11;
@@ -92,6 +141,12 @@ typedef struct
   uint32_t integral:12;
   uint32_t data_type_defining:1;
 } fa125_pulse_fdc_integral_n;
+
+typedef union
+{
+  uint32_t raw;
+  fa125_pulse_fdc_integral_n bf;
+} fa125_pulse_fdc_integral_n_t;
 
 /* 9: PULSE DATA, FDC FORMAT - Amplitude + Time */
 typedef struct
@@ -105,6 +160,12 @@ typedef struct
   uint32_t data_type_defining:1;
 } fa125_pulse_fdc_amplitude_1;
 
+typedef union
+{
+  uint32_t raw;
+  fa125_pulse_fdc_amplitude_1 bf;
+} fa125_pulse_fdc_amplitude_1_t;
+
 typedef struct
 {
   uint32_t pedestal:11;
@@ -113,55 +174,13 @@ typedef struct
   uint32_t data_type_defining:1;
 } fa125_pulse_fdc_amplitude_n;
 
-
-struct data_struct 
+typedef union
 {
-  uint32_t new_type;
-  uint32_t type;
-  uint32_t slot_id_hd;
-  uint32_t mod_id_hd;
-  uint32_t slot_id_tr;
-  uint32_t n_evts;
-  uint32_t blk_num;
-  uint32_t n_words;
-  uint32_t evt_num_1;
-  uint32_t time_now;
-  uint32_t time_1;
-  uint32_t time_2;
-  uint32_t chan;
-  uint32_t width;
-  uint32_t npk;
-  uint32_t le_time;
-  uint32_t time_quality;
-  uint32_t overflow_cnt;
-  uint32_t pedestal;
-  uint32_t fm_amplitude;
-  uint32_t peak_amplitude;
-  uint32_t peak_time;
-  uint32_t valid_1;
-  uint32_t adc_1;
-  uint32_t valid_2;
-  uint32_t adc_2;
-  uint32_t over;
-  uint32_t adc_sum;
-  uint32_t pulse_num;
-  uint32_t thres_bin;
-  uint32_t quality;
-  uint32_t integral;
-  uint32_t time;
-  uint32_t chan_a;
-  uint32_t source_a;
-  uint32_t chan_b;
-  uint32_t source_b;
-  uint32_t group;
-  uint32_t time_coarse;  
-  uint32_t time_fine;
-  uint32_t vmin;
-  uint32_t vpeak;
-  uint32_t scaler[18];/* data stream scalers */
-};
+  uint32_t raw;
+  fa125_pulse_fdc_amplitude_n bf;
+} fa125_pulse_fdc_amplitude_n_t;
 
-void  fa125DecodeData(uint32_t data);
+void  fa125DataDecode(uint32_t data);
 
 
 #endif /* __FA125DEC__ */
