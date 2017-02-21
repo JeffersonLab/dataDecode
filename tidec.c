@@ -1,6 +1,66 @@
 #include <stdio.h>
 #include <stdint.h>
 
+
+void
+tiDataDecode(uint32_t data)
+{
+  static uint8_t blocklevel = 0;
+  static uint16_t event_length = 0;
+  static uint32_t ievent = 0;
+  generic_data_word_t gword;
+  ti_event_header_t ehead;
+  trigger_bank_t tbank;
+  
+  gword.raw = data;
+  /* Check if the word is a block header */
+  if(gword.bf.data_type_defining && (gword.bf.data_type_tag == 0))
+    {
+      block_header_t d; d.raw = data;
+      
+      printf("%8X - BLOCK HEADER - slot = %d  modID = %d   n_evts = %d   n_blk = %d\n",
+	     d.raw,
+	     d.bf.slot_number,
+	     d.bf.module_ID,
+	     d.bf.number_of_events_in_block,
+	     d.bf.event_block_number);
+
+      blocklevel = d.bf.number_of_events_in_block;
+      ievent = 0;
+      event_length = 0;
+      return;
+    }
+
+  tbank.raw = data;
+  /* Check if the word is a trigger bank header */
+  if((tbank.bf.tag & 0xff10) == 0xff10)
+    {
+      printf("%8X - TRIGGER BANK HEADER - type = %d  blocklevel = %d\n",
+	     d.raw,
+	     d.bf.tag & 0xf,
+	     d.bf.number_of_events);
+
+      blocklevel = d.bf.number_of_events;
+      ievent = 0;
+      event_length = 0;
+      return;
+    }
+
+  ehead.raw = data;
+  /* Check if the word is an event header */
+  if(ehead.type == 0x01)
+    {
+      printf("%8x - EVENT HEADER - trigtype = %d  len = %d\n",
+	     d.raw,
+	     d.bf.trigger_type,
+	     d.bf.length);
+      
+      ievent = 0;
+      event_length = d.bf.length;
+      return;
+    }
+}
+
 int
 tiCheckTriggerBlock(volatile unsigned int *data)
 {
