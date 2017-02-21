@@ -1,123 +1,165 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "fa125dec.h"
+#include "jlabdec.h"
+#include "f1dec.h"
 
-void 
-f1DataDecode(int id, uint32_t data)
+void
+f1DataDecode(uint32_t data)
 {
   static uint32_t type_last = 15;	/* initialize to type FILLER WORD */
-	
-  uint32_t data_type, slot_id_hd, slot_id_tr, blk_evts, blk_num, blk_words;
-  uint32_t new_type, evt_num, time_1, time_2, mod_id;
-  int rev=0;
-  int mode=0, factor=0;
+  static uint32_t time_last = 0;
+  static int new_type = 0;
+  int type_current = 0;
+  generic_data_word_t gword;
 
-  /* Need to replace this */
-  /* rev = (f1Rev[id] & F1_VERSION_BOARDREV_MASK)>>8; */
+  gword.raw = data;
 
-  if(rev==2)
-    mode = 1;
-
-  factor = 2 - mode;
-	
-  if( data & 0x80000000 )		/* data type defining word */
+  if (gword.bf.data_type_defining)	/* data type defining word */
     {
       new_type = 1;
-      data_type = (data & 0x78000000) >> 27;
+      type_current = gword.bf.data_type_tag;
     }
   else
     {
       new_type = 0;
-      data_type = type_last;
+      type_current = type_last;
     }
-        
-  switch( data_type )
+
+  switch (type_current)
     {
-    case 0:		/* BLOCK HEADER */
-      slot_id_hd = (data & 0x7C00000) >> 22;
-      mod_id = (data & 0x003C0000) >> 18;
-      blk_num = (data & 0x3FF00) >> 8;
-      blk_evts = (data & 0xFF);
-      printf("      %08X - BLOCK HEADER  - slot = %u  id = %u  blk_evts = %u   n_blk = %u\n",
-	     data, slot_id_hd, mod_id, blk_evts, blk_num);
-      break;
+    case 0:			/* BLOCK HEADER */
+      {
+	block_header_t d;
+	d.raw = data;
 
-    case 1:		/* BLOCK TRAILER */
-      slot_id_tr = (data & 0x7C00000) >> 22;
-      blk_words = (data & 0x3FFFFF);
-      printf("      %08X - BLOCK TRAILER - slot = %u   n_words = %u\n",
-	     data, slot_id_tr, blk_words);
-      break;
+	printf
+	  ("%8X - BLOCK HEADER - slot = %d  modID = %d   n_evts = %d   n_blk = %d\n",
+	   d.raw, d.bf.slot_number, d.bf.module_ID,
+	   d.bf.number_of_events_in_block, d.bf.event_block_number);
 
-    case 2:		/* EVENT HEADER */
-      evt_num = (data & 0x3FFFFF);
-      printf("      %08X - EVENT HEADER - evt_num = %u\n", data, evt_num);
-      break;
+	break;
+      }
 
-    case 3:		/* TRIGGER TIME */
-      if( new_type )
-	{
-	  time_1 = (data & 0xFFFFFF);
-	  printf("      %08X - TRIGGER TIME 1 - time = %u\n", data, time_1);
-	  type_last = 3;
-	}    
-      else
-	{
-	  if( type_last == 3 )
-	    {
-	      time_2 = (data & 0xFFFF);
-	      printf("      %08X - TRIGGER TIME 2 - time = %u\n", data, time_2);
-	    }    
-	  else
-	    printf("      %08X - TRIGGER TIME - (ERROR)\n", data);	                
-	}    
-      break;
+    case 1:			/* BLOCK TRAILER */
+      {
+	f1_block_trailer_t d;
+	d.raw = data;
 
-    case 7:		/* EVENT DATA */
-      printf("TDC = %08X   ED   ERR=%X  fake = %u  chip=%u  chan=%u  t = %u ", 
-	     data, 
-	     ((data >> 24) & 0x7), // ERR
-	     ((data >> 22) & 1),   // Fake data flag
-	     ((data >> 19) & 0x7), // chip
-	     ((data >> 16) & 0x7), // chan
-	     (data & 0xFFFF)); // t
-      printf("(%u ps)\n", 
-	     ( (data & 0xFFFF) * 56 * factor ));
-      break;
+	printf("%8X - BLOCK TRAILER - slot = %d   n_words = %d\n",
+	       d.raw, d.bf.slot_number, d.bf.words_in_block);
 
-    case 8:		/* CHIP HEADER */
-      /* need 2 prints - maximum # of variables is 7 in VxWorks printf (?) */
-      printf("TDC = %08X --CH-- (%X,%u)  chip=%u  chan=%u  trig = %u  t = %3u ", 
-	     data, 
-	     ((data >> 24) & 0x7), 
-	     ((data >> 6) & 0x1), 
-	     ((data >> 3) & 0x7), // chip
-	     (data & 0x7),  //chan
-	     ((data >> 16) & 0x3F),  // trig
-	     ((data >> 7) & 0x1FF)); // t
-      printf("(%u ps) (P=%u)\n", 
-	     ( ( (data >> 7) & 0x1FF) * 56 * factor * 128 ),
-	     ((data >> 6) & 0x1));
-      break;
+	break;
+      }
 
-    case 14:		/* DATA NOT VALID (no data available) */
-      printf("      %08X - DATA NOT VALID = %u\n", data, data_type);
-      break;
-    case 15:		/* FILLER WORD */
-      printf("      %08X - FILLER WORD = %u\n", data, data_type);
-      break;
-       	        
-    case 4:		/* UNDEFINED TYPE */
-    case 5:		/* UNDEFINED TYPE */
-    case 6:		/* UNDEFINED TYPE */
-    case 9:		/* UNDEFINED TYPE */
-    case 10:		/* UNDEFINED TYPE */
-    case 11:		/* UNDEFINED TYPE */
-    case 12:		/* UNDEFINED TYPE */
-    case 13:		/* UNDEFINED TYPE */
+    case 2:			/* EVENT HEADER */
+      {
+	event_header_t d;
+	d.raw = data;
+
+	printf("%8X - EVENT HEADER - trig num = %d\n",
+	       d.raw, d.bf.event_number);
+	break;
+
+
+	break;
+      }
+
+    case 3:			/* TRIGGER TIME */
+      {
+	if (new_type)
+	  {
+	    f1_trigger_time_1_t d;
+	    d.raw = data;
+
+	    printf("%8X - TRIGGER TIME 1 - time = %06x\n",
+		   d.raw, (d.bf.T_C << 16) | (d.bf.T_D << 8) | (d.bf.T_E));
+
+	    time_last = 1;
+	  }
+	else
+	  {
+	    if (time_last == 1)
+	      {
+		f1_trigger_time_2_t d;
+		d.raw = data;
+		printf("%8X - TRIGGER TIME 2 - time = %04x\n",
+		       d.raw, (d.bf.T_A << 8) | (d.bf.T_B));
+
+	      }
+	    else
+	      printf("%8X - TRIGGER TIME - (ERROR)\n", data);
+	  }
+	break;
+      }
+
+    case 7:			/* EVENT DATA */
+      {
+	f1_time_measurement_t d;
+	d.raw = data;
+	printf("%8X - TIME MEASUREMENT   ERR=%X  fake = %u  chip=%u  chan=%u  t = %u\n",
+	       d.raw,
+	       (d.bf.resolution_locked << 2) |
+	       (d.bf.output_fifo_overflow << 1) |
+	       d.bf.hit_fifo_overflow,	// ERR
+	       d.bf.fake,	// Fake data flag
+	       d.bf.chip_number,	// chip
+	       d.bf.chip_channel_number,	// chan
+	       d.bf.time_measurement);	// t
+
+	break;
+      }
+
+    case 8:			/* CHIP HEADER */
+      {
+	f1_chip_header_t d;
+	d.raw = data;
+	printf("%8X - CHIP HEADER (%X,%u)  chip=%u  chan=%u  trig = %u  t = %3u\n",
+	       d.raw,
+	       (d.bf.resolution_locked << 2) |
+	       (d.bf.output_fifo_overflow << 1) |
+	       d.bf.hit_fifo_overflow,	// ERR
+	       d.bf.setup_register_tag, d.bf.chip_number,	// chip
+	       d.bf.chip_channel_number,	// chan
+	       d.bf.trigger_number, d.bf.trigger_time);
+
+	break;
+      }
+
+    case 14:			/* DATA NOT VALID (no data available) */
+      {
+	data_not_valid_t d;
+	d.raw = data;
+
+	printf("%8X - DATA NOT VALID = %d\n", d.raw, d.bf.data_type_tag);
+
+	break;
+      }
+
+    case 15:			/* FILLER WORD */
+      {
+	filler_word_t d;
+	d.raw = data;
+
+	printf("%8X - FILLER WORD = %d\n", d.raw, d.bf.data_type_tag);
+
+	break;
+      }
+
+    case 4:			/* UNDEFINED TYPE */
+    case 5:			/* UNDEFINED TYPE */
+    case 6:			/* UNDEFINED TYPE */
+    case 9:			/* UNDEFINED TYPE */
+    case 10:			/* UNDEFINED TYPE */
+    case 11:			/* UNDEFINED TYPE */
+    case 12:			/* UNDEFINED TYPE */
+    case 13:			/* UNDEFINED TYPE */
     default:
-      printf("      %08X - UNDEFINED TYPE = %u\n", data, data_type);
-      break;
+      {
+	printf("%8X - UNDEFINED TYPE = %d\n",
+	       gword.raw, gword.bf.data_type_tag);
+	break;
+      }
     }
-	        
-}        
+
+  type_last = type_current;	/* save type of current data word */
+}

@@ -8,7 +8,7 @@ typedef struct
   uint32_t words_in_block:22;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } f1_block_trailer;
 
 typedef union
@@ -95,6 +95,6 @@ typedef union
 
 
 
-void f1DataDecode(int id, uint32_t data);
+void f1DataDecode(uint32_t data);
 
 #endif /* __F1DEC__ */
