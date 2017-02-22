@@ -34,7 +34,7 @@ main(int argc, char *argv[])
   /* Evaluate the command line arguments */
   strncpy((char *) &progName, argv[0], 255);
 
-  while (iarg < argc) 
+  if(argc > 1)
     {
       /* help */
       if ((strcmp(argv[iarg],"-h") == 0) || (strcmp(argv[iarg],"--help") == 0))
@@ -42,20 +42,21 @@ main(int argc, char *argv[])
 	  usage();
 	  return 0;
 	}
-
+  
       /* byteswapping specified */
       if ((strcmp(argv[iarg],"-b") == 0) || (strcmp(argv[iarg],"--byteswap") == 0))
 	{
 	  byteswap = 1;
 	  ++iarg;
 	}
-      
+
       /* Filename included */
       if (iarg == argc-1)
 	{
 	  f = fopen(argv[iarg], "r");
 	  if(f)
 	    {
+	      printf("\n");
 	      while(fscanf(f, "%x", &data) > 0)
 		{
 		  if(byteswap)
@@ -66,31 +67,31 @@ main(int argc, char *argv[])
 	    }
 	  else
 	    perror(argv[1]);
-	  break;
+
+	  return 0;
+	}
+    }
+
+  /* User data entry */
+  printf("\n");
+  while(1)
+    {
+      line_len = getline(&user_input, &input_size, stdin);
+      if(line_len > 1)
+	{
+	  while(sscanf(user_input + bytes_skip, "%x%n", &data,
+		       &bytes_read) == 1)
+	    {
+	      if(byteswap)
+		data = bswap_32(data);
+	      
+	      DATADECODE(data);
+	      bytes_skip += bytes_read;
+	    }
+	  bytes_skip = 0;
 	}
       else
-	{
-	  /* User data entry */
-	  while(1)
-	    {
-	      line_len = getline(&user_input, &input_size, stdin);
-	      if(line_len > 1)
-		{
-		  while(sscanf(user_input + bytes_skip, "%x%n", &data,
-			       &bytes_read) == 1)
-		    {
-		      if(byteswap)
-			data = bswap_32(data);
-
-		      DATADECODE(data);
-		      bytes_skip += bytes_read;
-		    }
-		  bytes_skip = 0;
-		}
-	      else
-		break;
-	    }
-	}
+	break;
     }
   
   return 0;
