@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <byteswap.h>
+#include <string.h>
 #include "tidec.h"
 #include "f1dec.h"
 #include "fa250dec.h"
@@ -14,9 +15,14 @@
 #define DATADECODE fa250DataDecode
 #endif
 
+char progName[255];
+void usage();
+
 int
 main(int argc, char *argv[])
 {
+  int iarg = 1;
+  int byteswap = 0;
   FILE *f;
   uint32_t data = 0;
   char *user_input = NULL;
@@ -25,37 +31,82 @@ main(int argc, char *argv[])
   int bytes_read, bytes_skip = 0;
 
   
-  if(argc == 2)
+  /* Evaluate the command line arguments */
+  strncpy((char *) &progName, argv[0], 255);
+
+  while (iarg < argc) 
     {
-      f = fopen(argv[1], "r");
-      if(f)
+      /* help */
+      if ((strcmp(argv[iarg],"-h") == 0) || (strcmp(argv[iarg],"--help") == 0))
 	{
-	  while(fscanf(f, "%x", &data) > 0)
-	    {
-	      /* data = bswap_32(data); */
-	      DATADECODE(data);
-	    }
+	  usage();
+	  return 0;
 	}
-      else
-	perror(argv[1]);
-    }
-  else if(argc == 1)
-    {
-      while(1)
+
+      /* byteswapping specified */
+      if ((strcmp(argv[iarg],"-b") == 0) || (strcmp(argv[iarg],"--byteswap") == 0))
 	{
-	  line_len = getline(&user_input, &input_size, stdin);
-	  if(line_len > 1)
+	  byteswap = 1;
+	  ++iarg;
+	}
+      
+      /* Filename included */
+      if (iarg == argc-1)
+	{
+	  f = fopen(argv[iarg], "r");
+	  if(f)
 	    {
-	      while(sscanf(user_input + bytes_skip, "%x%n", &data, &bytes_read) == 1)
+	      while(fscanf(f, "%x", &data) > 0)
 		{
+		  if(byteswap)
+		    data = bswap_32(data);
+		  
 		  DATADECODE(data);
-		  bytes_skip += bytes_read;
 		}
-	      bytes_skip = 0;
 	    }
 	  else
-	    break;
+	    perror(argv[1]);
+	  break;
+	}
+      else
+	{
+	  /* User data entry */
+	  while(1)
+	    {
+	      line_len = getline(&user_input, &input_size, stdin);
+	      if(line_len > 1)
+		{
+		  while(sscanf(user_input + bytes_skip, "%x%n", &data,
+			       &bytes_read) == 1)
+		    {
+		      if(byteswap)
+			data = bswap_32(data);
+
+		      DATADECODE(data);
+		      bytes_skip += bytes_read;
+		    }
+		  bytes_skip = 0;
+		}
+	      else
+		break;
+	    }
 	}
     }
+  
   return 0;
+}
+
+void
+usage()
+{
+  printf("\nUsage: ");
+  printf("%s [OPTION] [FILENAME]\n", progName);
+  printf("If [FILENAME] is not specified, user input is accepted.\n");
+  printf("\n");
+  printf("OPTIONs:\n");
+  printf("  -h, --help                    This help page.\n");
+  printf("  -b, --byteswap                Byteswap (32bit) before decoding.\n");
+  printf("\n\n");
+  
+  
 }
