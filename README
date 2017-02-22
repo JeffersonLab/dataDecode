@@ -13,6 +13,8 @@ Currently Supports:
      1877(s) TDC
 
   CAEN Modules:
+     775 TDC
+     792 ADC
      1190/1290 TDC
 
 Usage: dataDecode [OPTION] [FILENAME]
