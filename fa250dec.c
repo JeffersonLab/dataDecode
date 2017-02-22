@@ -4,7 +4,7 @@
 #include "fa250dec.h"
 
 void 
-faDataDecode(uint32_t data)
+fa250DataDecode(uint32_t data)
 {
   static uint32_t type_last = 15;	/* initialize to type FILLER WORD */
   static uint32_t time_last = 0;

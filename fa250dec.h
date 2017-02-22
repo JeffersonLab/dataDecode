@@ -181,7 +181,7 @@ typedef union
   fa250_scaler_2 bf;
 } fa250_scaler_2_t;
 
-void  faDataDecode(uint32_t data);
+void  fa250DataDecode(uint32_t data);
 
 
 #endif /* __FA250DEC__ */
