@@ -11,6 +11,7 @@
 #include "lecroy1877dec.h"
 #include "lecroy1881dec.h"
 #include "caen1190dec.h"
+#include "caen792dec.h"
 
 #ifndef DATADECODE
 #define DATADECODE fa250DataDecode
