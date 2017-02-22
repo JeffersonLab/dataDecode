@@ -7,7 +7,8 @@ lecroy1881DataDecode(uint32_t data)
 {
   static uint32_t nwords = 0, iword = 0;
 
-  if(iword == nwords)
+  if((nwords == 0)
+     || ((iword + 1) == nwords))
     {
       /* Assume we're at the beginning of module output.  data should
 	 be the header */
@@ -29,7 +30,7 @@ lecroy1881DataDecode(uint32_t data)
 
       printf("%8X - DATA (%4d/%4d) - G = %2d  P = %d  Buff = %d  Chan %3d  data = %5d\n",
 	     d.raw,
-	     iword + 1,
+	     iword + 2,
 	     nwords,
 	     d.bf.geo_address,
 	     d.bf.word_parity,
