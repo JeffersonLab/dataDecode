@@ -12,6 +12,9 @@ Currently Supports:
      1881 ADC
      1877(s) TDC
 
+  CAEN Modules:
+     1190/1290 TDC
+
 Usage: dataDecode [OPTION] [FILENAME]
 If [FILENAME] is not specified, user input is accepted.
   Press <Enter> twice to exit.
@@ -22,15 +25,18 @@ OPTIONs:
 
 There's an executable for each module.
 
+A compiled version is available for use here:
+  /site/coda/contrib/devel/dataDecode/
 
 DEMO!!!
 
 > tidec -b    
    0x1e2011ff   0x030001cd   0x01000000   0x36c86e26 
-          0x0000402e   0x030001cd   0x02000000   0x7add6e26   0x00005083 
-          0x030001cd   0x03000000   0x9e486f26   0x0000e02f   0x030001cd 
-          0x04000000   0x82e06f26   0x0000708f   0x030001cd   0x05000000 
-          0x56407026   0x0000c00e
+   0x0000402e   0x030001cd   0x02000000   0x7add6e26   0x00005083 
+   0x030001cd   0x03000000   0x9e486f26   0x0000e02f   0x030001cd 
+   0x04000000   0x82e06f26   0x0000708f   0x030001cd   0x05000000 
+   0x56407026   0x0000c00e
+   
 FF11201E - TRIGGER BANK HEADER - timestamp = 1  blocklevel = 30
 CD010003 - EVENT HEADER (  1 /  30) - trigtype = 205  len = 3
        1 - EVENT DATA (  1 /   3)

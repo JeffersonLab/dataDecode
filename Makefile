@@ -16,7 +16,7 @@ else
 endif
 
 CROSS_COMPILE		=
-CC			= $(CROSS_COMPILE)gcc
+CC			= $(CROSS_COMPILE)gcc -m32
 AR                      = ar
 RANLIB                  = ranlib
 INCS			= -I.
