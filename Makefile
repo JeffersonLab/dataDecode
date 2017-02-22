@@ -23,22 +23,18 @@ INCS			= -I.
 CFLAGS			= -Wall -g  \
 			  -L. 
 SRC			= $(wildcard *.c)
-DEPS			= $(SRC:.c=.d)
-OBJS			= $(SRC:.c=.o)
-PROGS			= dataDecode
+SRC2			= $(filter-out dataDecode.c,${SRC})
+DEPS			= $(SRC2:.c=.d)
+PROGS			= $(SRC2:.c=)
 
 all: $(PROGS)
 
 clean distclean:
 	@rm -f $(PROGS) *~ $(OBJS) $(DEPS)
 
-dataDecode: $(OBJS)
+%: %.c
 	@echo " CC     $@"
-	${Q}$(CC) $(CFLAGS) $(INCS) -o $@ $(OBJS)
-
-%.o: %.c
-	@echo " CC     $@"
-	${Q}$(CC) $(CFLAGS) $(INCS) -c -o $@ $<
+	${Q}$(CC) $(CFLAGS) $(INCS) -DDATADECODE=$(@:dec=DataDecode) -o $@ $< dataDecode.c 
 
 %.d: %.c
 	@echo " DEP    $@"

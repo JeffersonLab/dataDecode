@@ -34,4 +34,6 @@ typedef union
   lecroy1881_data bf;
 } lecroy1881_data_t;
 
+void lecroy1881DataDecode(uint32_t data);
+
 #endif /* __LECROY1881DEC__ */

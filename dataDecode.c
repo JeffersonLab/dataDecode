@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include <byteswap.h>
 #include "tidec.h"
+#include "f1dec.h"
+#include "fa250dec.h"
+#include "fa125dec.h"
+#include "lecroy1877dec.h"
+#include "lecroy1881dec.h"
 
 #ifndef DATADECODE
 #define DATADECODE fa250DataDecode
