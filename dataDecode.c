@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include "fa250dec.h"
+#include <byteswap.h>
+#include "tidec.h"
 
 int
 main(int argc, char *argv[])
@@ -14,7 +15,8 @@ main(int argc, char *argv[])
     {
       while(fscanf(f, "%x", &data) > 0)
 	{
-	  faDataDecode(data);
+	  data = bswap_32(data);
+	  tiDataDecode(data);
 	}
     }
   else
