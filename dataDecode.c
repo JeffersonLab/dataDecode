@@ -12,6 +12,7 @@
 #include "lecroy1881dec.h"
 #include "caen1190dec.h"
 #include "caen792dec.h"
+#include "caen775dec.h"
 
 #ifndef DATADECODE
 #define DATADECODE fa250DataDecode

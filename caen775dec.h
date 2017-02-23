@@ -68,4 +68,5 @@ typedef union
 } caen775_end_of_block_t;
 
 void caen775DataDecode(uint32_t data);
+
 #endif /* __CAEN775DEC__ */

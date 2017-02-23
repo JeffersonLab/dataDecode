@@ -31,6 +31,7 @@ caen775DataDecode(uint32_t data)
 	       d.raw,
 	       d.bf.geo,
 	       d.bf.channel_number,
+	       d.bf.valid,
 	       d.bf.underflow,
 	       d.bf.overflow,
 	       d.bf.adc);
