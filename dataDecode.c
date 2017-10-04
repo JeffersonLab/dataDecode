@@ -13,6 +13,7 @@
 #include "caen1190dec.h"
 #include "caen792dec.h"
 #include "caen775dec.h"
+#include "vfTDCdec.h"
 
 #ifndef DATADECODE
 #define DATADECODE fa250DataDecode
@@ -33,7 +34,7 @@ main(int argc, char *argv[])
   size_t line_len = 0;
   int bytes_read, bytes_skip = 0;
 
-  
+
   /* Evaluate the command line arguments */
   strncpy((char *) &progName, argv[0], 255);
 
@@ -45,7 +46,7 @@ main(int argc, char *argv[])
 	  usage();
 	  return 0;
 	}
-  
+
       /* byteswapping specified */
       if ((strcmp(argv[iarg],"-b") == 0) || (strcmp(argv[iarg],"--byteswap") == 0))
 	{
@@ -64,7 +65,7 @@ main(int argc, char *argv[])
 		{
 		  if(byteswap)
 		    data = bswap_32(data);
-		  
+
 		  DATADECODE(data);
 		}
 	    }
@@ -87,7 +88,7 @@ main(int argc, char *argv[])
 	    {
 	      if(byteswap)
 		data = bswap_32(data);
-	      
+
 	      DATADECODE(data);
 	      bytes_skip += bytes_read;
 	    }
@@ -96,7 +97,7 @@ main(int argc, char *argv[])
       else
 	break;
     }
-  
+
   return 0;
 }
 
@@ -111,6 +112,6 @@ usage()
   printf("  -h, --help                    This help page.\n");
   printf("  -b, --byteswap                Byteswap (32bit) before decoding.\n");
   printf("\n\n");
-  
-  
+
+
 }

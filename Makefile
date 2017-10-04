@@ -21,7 +21,7 @@ AR                      = ar
 RANLIB                  = ranlib
 INCS			= -I.
 CFLAGS			= -Wall -g  \
-			  -L. 
+			  -L.
 SRC			= $(wildcard *.c)
 SRC2			= $(filter-out dataDecode.c,${SRC})
 DEPS			= $(SRC2:.c=.d)
@@ -34,7 +34,7 @@ clean distclean:
 
 %: %.c
 	@echo " CC     $@"
-	${Q}$(CC) $(CFLAGS) $(INCS) -DDATADECODE=$(@:dec=DataDecode) -o $@ $< dataDecode.c 
+	${Q}$(CC) $(CFLAGS) $(INCS) -DDATADECODE=$(@:dec=DataDecode) -o $@ $< dataDecode.c
 
 %.d: %.c
 	@echo " DEP    $@"
