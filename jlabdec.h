@@ -23,7 +23,7 @@ typedef struct
   uint32_t module_ID:4;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } block_header;
 
 typedef union
@@ -38,7 +38,7 @@ typedef struct
   uint32_t words_in_block:22;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } block_trailer;
 
 typedef union
@@ -53,7 +53,7 @@ typedef struct
   uint32_t event_number:22;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } event_header;
 
 typedef union
@@ -68,7 +68,7 @@ typedef struct
   uint32_t undef:22;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } event_trailer;
 
 typedef union
@@ -83,7 +83,7 @@ typedef struct
   uint32_t undef:22;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } data_not_valid;
 
 typedef union
@@ -99,7 +99,7 @@ typedef struct
   uint32_t undef:22;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } filler_word;
 
 typedef union
