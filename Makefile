@@ -20,8 +20,10 @@ CC			= $(CROSS_COMPILE)gcc -m32
 AR                      = ar
 RANLIB                  = ranlib
 INCS			= -I.
-CFLAGS			= -Wall -g  \
-			  -L.
+CFLAGS			= -L.
+ifeq ($(DEBUG),1)
+	CFLAGS		+= -Wall -g
+endif
 SRC			= $(wildcard *.c)
 SRC2			= $(filter-out dataDecode.c,${SRC})
 DEPS			= $(SRC2:.c=.d)
@@ -34,12 +36,13 @@ clean distclean:
 
 %: %.c
 	@echo " CC     $@"
-	${Q}$(CC) $(CFLAGS) $(INCS) -DDATADECODE=$(@:dec=DataDecode) -o $@ $< dataDecode.c
+	${Q}$(CC) $(CFLAGS) $(INCS) -DDATADECODE=$(@:dec=DataDecode) \
+		-include $(@).h -o $@ $< dataDecode.c
 
 %.d: %.c
 	@echo " DEP    $@"
 	@set -e; rm -f $@; \
-	$(CC) -MM -shared $(INCS) $< > $@.$$$$; \
+	$(CC) -MM -shared $(INCS) -include $(@:.d=.h) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
