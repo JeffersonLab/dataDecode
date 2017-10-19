@@ -1,19 +1,10 @@
 #define _GNU_SOURCE
-#include <stdlib.h>
+#define __USE_GNU
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <byteswap.h>
 #include <string.h>
-#include "tidec.h"
-#include "f1dec.h"
-#include "fa250dec.h"
-#include "fa125dec.h"
-#include "lecroy1877dec.h"
-#include "lecroy1881dec.h"
-#include "caen1190dec.h"
-#include "caen792dec.h"
-#include "caen775dec.h"
-#include "vfTDCdec.h"
 
 #ifndef DATADECODE
 #define DATADECODE fa250DataDecode
