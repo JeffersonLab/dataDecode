@@ -26,7 +26,7 @@ typedef union
 typedef struct
 {
   uint32_t geo:5;
-  uint32_t event_count:4;
+  uint32_t event_count:22;
   uint32_t word_type:5;
 } caen1190_global_header;
 

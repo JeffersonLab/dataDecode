@@ -2,13 +2,13 @@
 #include <stdint.h>
 #include "caen1190dec.h"
 
-void 
+void
 caen1190DataDecode(uint32_t data)
 {
   caen1190_generic_word_t gword;
 
   gword.raw = data;
-  
+
   switch(gword.bf.word_type)
     {
     case CAEN1190_DATATYPE_GLOBAL_HEADER:
@@ -33,7 +33,7 @@ caen1190DataDecode(uint32_t data)
 	       d.bf.bunch_id);
 	break;
       }
-      
+
     case CAEN1190_DATATYPE_MEASUREMENT:
       {
 	caen1190_tdc_measurement_t d; d.raw = data;
@@ -45,7 +45,7 @@ caen1190DataDecode(uint32_t data)
 	       d.bf.measurement);
 	break;
       }
-      
+
     case CAEN1190_DATATYPE_TDC_TRAILER:
       {
 	caen1190_tdc_trailer_t d; d.raw= data;
@@ -78,7 +78,7 @@ caen1190DataDecode(uint32_t data)
 	       d.bf.trigger_time);
 	break;
       }
-      
+
     case CAEN1190_DATATYPE_GLOBAL_TRAILER:
       {
 	caen1190_global_trailer_t d; d.raw = data;
@@ -92,7 +92,7 @@ caen1190DataDecode(uint32_t data)
 	       d.bf.trigger_lost);
 	break;
       }
-      
+
     case CAEN1190_DATATYPE_FILLER:
       {
 	caen1190_filler_t d; d.raw = data;
