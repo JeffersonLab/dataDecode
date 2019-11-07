@@ -9,7 +9,7 @@ typedef struct
   uint32_t NSB:9;
   uint32_t PL:11;
   uint32_t undef:2;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } fa250_block_header_2;
 
 typedef union
@@ -25,7 +25,7 @@ typedef struct
   uint32_t trigger_time:10;
   uint32_t slot_number:5;
   uint32_t data_type_tag:4;
-  uint32_t data_type_defining:1;  
+  uint32_t data_type_defining:1;
 } fa250_event_header;
 
 typedef union
@@ -99,6 +99,42 @@ typedef union
   uint32_t raw;
   fa250_window_raw_data_n bf;
 } fa250_window_raw_data_n_t;
+
+/* 7: PULSE INTEGRAL */
+typedef struct
+{
+  uint32_t integral:19;
+  uint32_t quality_factor:2;
+  uint32_t pulse_number:2;
+  uint32_t channel_number:4;
+  uint32_t data_type_tag:4;
+  uint32_t data_type_defining:1;
+} fa250_pulse_integral;
+
+typedef union
+{
+  uint32_t raw;
+  fa250_pulse_integral bf;
+} fa250_pulse_integral_t;
+
+/* 8: PULSE TIME */
+typedef struct
+{
+  uint32_t time:16;
+  uint32_t blank:3;
+  uint32_t quality_factor:2;
+  uint32_t pulse_number:2;
+  uint32_t channel_number:4;
+  uint32_t data_type_tag:4;
+  uint32_t data_type_defining:1;
+} fa250_pulse_time;
+
+typedef union
+{
+  uint32_t raw;
+  fa250_pulse_time bf;
+} fa250_pulse_time_t;
+
 
 /* 9: PULSE PARAMETERS */
 typedef struct
