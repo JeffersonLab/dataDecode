@@ -10,8 +10,7 @@ sspApvDataDecode(uint32_t data)
   static uint32_t time_last = 0;
   static int new_type = 0;
   int type_current = 0;
-  static int pulse_number = 0;
-  static int isca = 0;
+  static int apv_data_word = 0;
   generic_data_word_t gword;
 
   gword.raw = data;
@@ -72,7 +71,7 @@ sspApvDataDecode(uint32_t data)
 
 	    printf("%8X - TRIGGER TIME 1 - time = %08x\n",
 		   d.raw,
-		   (d.bf.T_C<<24) | (d.bf.T_D<<16) | (d.bf.T_E<<8) | (d.bf.T_F) );
+		   d.bf.trigger_time_l);
 
 	    time_last = 1;
 	  }
@@ -83,12 +82,73 @@ sspApvDataDecode(uint32_t data)
 	      {
 		printf("%8X - TRIGGER TIME 2 - time = %08x\n",
 		       d.raw,
-		       (d.bf.T_A<<16) | (d.bf.T_B<<8) | (d.bf.T_C) );
+		       d.bf.trigger_time_h);
 	      }
 	    else
 	      printf("%8X - TRIGGER TIME - (ERROR)\n", data);
 
 	    time_last = 0;
+	  }
+	break;
+      }
+
+    case 5:		/* MPD Frame */
+      {
+	if( new_type )
+	  {
+	    sspApv_mpd_frame_1_t d; d.raw = data;
+
+	    printf("%8X - FIBER = %2d  MPD_ID = %2d\n",
+		   d.raw,
+		   d.bf.fiber,
+		   d.bf.mpd_id);
+
+	    apv_data_word = 1;
+	  }
+	else
+	  {
+	    switch(apv_data_word)
+	      {
+	      case 1:
+		{
+		  sspApv_apv_data_1_t d; d.raw = data;
+		  printf("%8X - APV DATA 1 - CHANNEL_NUM(4:0) = %2d S1 = %4x  S0 = %4x\n",
+			 d.raw,
+			 d.bf.apv_channel_num_40,
+			 d.bf.apv_sample1,
+			 d.bf.apv_sample0);
+
+		  apv_data_word++;
+		  break;
+		}
+	      case 2:
+		{
+		  sspApv_apv_data_2_t d; d.raw = data;
+		  printf("%8X - APV DATA 2 - CHANNEL_NUM(6:5) = %d S3 = %4x  S2 = %4x\n",
+			 d.raw,
+			 d.bf.apv_channel_num_65,
+			 d.bf.apv_sample3,
+			 d.bf.apv_sample2);
+
+		  apv_data_word++;
+		  break;
+		}
+	      case 3:
+		{
+		  sspApv_apv_data_3_t d; d.raw = data;
+		  printf("%8X - APV DATA 3 - APV_ID = %2d S5 = %4x  S4 = %4x\n",
+			 d.raw,
+			 d.bf.apv_id,
+			 d.bf.apv_sample5,
+			 d.bf.apv_sample4);
+
+		  apv_data_word=1;
+		  break;
+		}
+	      default:
+		break;
+	      }
+
 	  }
 	break;
       }
