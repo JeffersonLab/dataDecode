@@ -43,6 +43,7 @@ typedef struct
   uint32_t underflow:1;
   uint32_t undef:2;
   uint32_t channel_number:5;
+  uint32_t undef2:3;
   uint32_t word_type:3;
   uint32_t geo:5;
 } caen792_data;
