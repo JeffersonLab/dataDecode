@@ -100,6 +100,35 @@ typedef union
   fa250_window_raw_data_n bf;
 } fa250_window_raw_data_n_t;
 
+/* 5: PEPPo Channel Sums  */
+typedef struct
+{
+  uint32_t hi_sum:16;
+  uint32_t _blank0:7;
+  uint32_t channel_number:4;
+  uint32_t data_type_tag:4;
+  uint32_t data_type_defining:1;
+} fa250_peppo_hi_sum;
+
+typedef union
+{
+  uint32_t raw;
+  fa250_peppo_hi_sum bf;
+} fa250_peppo_hi_sum_t;
+
+typedef struct
+{
+  uint32_t lo_sum:24;
+  uint32_t _blank0:7;
+  uint32_t data_type_defining:1;
+} fa250_peppo_lo_sum;
+
+typedef union
+{
+  uint32_t raw;
+  fa250_peppo_lo_sum bf;
+} fa250_peppo_lo_sum_t;
+
 /* 7: PULSE INTEGRAL */
 typedef struct
 {

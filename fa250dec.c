@@ -132,6 +132,29 @@ fa250DataDecode(uint32_t data)
 	break;
       }
 
+    case 5:		/* PEPPo Channel Sums */
+      {
+	if( new_type )
+	  {
+	    fa250_peppo_hi_sum_t d; d.raw = data;
+
+	    printf("%8X - PEPPo Hi Sum - chan = %d   hi sum = 0x%x\n",
+		   d.raw,
+		   d.bf.channel_number,
+		   d.bf.hi_sum);
+	    break;
+	  }
+	else
+	  {
+	    fa250_peppo_lo_sum_t d; d.raw = data;
+
+	    printf("%8X - PEPPo Lo Sum - lo sum = 0x%06x\n",
+		   d.raw,
+		   d.bf.lo_sum);
+	    break;
+	  }
+      }
+
     case 7:		/* PULSE INTEGRAL */
       {
 	fa250_pulse_integral_t d; d.raw = data;
@@ -255,7 +278,6 @@ fa250DataDecode(uint32_t data)
 	break;
       }
 
-    case 5:
     case 6:
     case 10:
     case 11:
