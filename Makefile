@@ -22,7 +22,7 @@ RANLIB                  = ranlib
 INCS			= -I.
 CFLAGS			= -L.
 ifeq ($(DEBUG),1)
-	CFLAGS		+= -Wall -g
+	CFLAGS		+= -Wall -Wno-unused -g
 endif
 SRC			= $(wildcard *.c)
 SRC2			= $(filter-out dataDecode.c,${SRC})
@@ -42,7 +42,7 @@ clean distclean:
 %.d: %.c
 	@echo " DEP    $@"
 	@set -e; rm -f $@; \
-	$(CC) -MM -shared $(INCS) -include $(@:.d=.h) $< > $@.$$$$; \
+	$(CC) -MM $(INCS) -include $(@:.d=.h) $< > $@.$$$$; \
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
